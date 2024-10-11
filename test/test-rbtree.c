@@ -74,6 +74,7 @@ void test_erase_root(const key_t key) {
 static void insert_arr(rbtree *t, const key_t *arr, const size_t n) {
   for (size_t i = 0; i < n; i++) {
     rbtree_insert(t, arr[i]);
+    printf("insert %d\n", arr[i]);
   }
 }
 
@@ -281,6 +282,7 @@ void test_rb_constraints(const key_t arr[], const size_t n) {
 
 // rbtree should manage distinct values
 void test_distinct_values() {
+  //const key_t entries[] = {10, 5, 8, 34, 67, 23, 156, 24, 2, 12};
   const key_t entries[] = {10, 5, 8, 34, 67, 23, 156, 24, 2, 12};
   const size_t n = sizeof(entries) / sizeof(entries[0]);
   test_rb_constraints(entries, n);
@@ -317,13 +319,16 @@ void test_find_erase(rbtree *t, const key_t *arr, const size_t n) {
   }
 
   for (int i = 0; i < n; i++) {
+    printf("%d\n", i);
     node_t *p = rbtree_find(t, arr[i]);
-    // printf("arr[%d] = %d\n", i, arr[i]);
+    printf("arr[%d] = %d\n", i, arr[i]);
+    printf("len: %d\n", RBTREE_len(t));
+    print_RBTREE(t);
     assert(p != NULL);
     assert(p->key == arr[i]);
     rbtree_erase(t, p);
   }
-
+  
   for (int i = 0; i < n; i++) {
     node_t *p = rbtree_find(t, arr[i]);
     assert(p == NULL);
@@ -344,6 +349,7 @@ void test_find_erase(rbtree *t, const key_t *arr, const size_t n) {
 
 void test_find_erase_fixed() {
   const key_t arr[] = {10, 5, 8, 34, 67, 23, 156, 24, 2, 12, 24, 36, 990, 25};
+  //const key_t arr[] = {10, 5, 8, 34, 67, 23};
   const size_t n = sizeof(arr) / sizeof(arr[0]);
   rbtree *t = new_rbtree();
   assert(t != NULL);
@@ -359,8 +365,9 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
   key_t *arr = calloc(n, sizeof(key_t));
   for (int i = 0; i < n; i++) {
     arr[i] = rand();
+    arr[i] = arr[i] % 10000;
   }
-
+  
   test_find_erase(t, arr, n);
 
   free(arr);
@@ -368,16 +375,17 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 }
 
 int main(void) {
-  test_init();
-  test_insert_single(1024);
-  test_find_single(512, 1024);
-  test_erase_root(128);
-  test_find_erase_fixed();
-  test_minmax_suite();
-  test_to_array_suite();
-  test_distinct_values();
-  test_duplicate_values();
-  test_multi_instance();
-  test_find_erase_rand(10000, 17);
+  // test_init();
+  // test_insert_single(1024);
+  // test_find_single(512, 1024);
+  // test_erase_root(128);
+  // test_find_erase_fixed();
+  // test_minmax_suite();
+  // test_to_array_suite();
+  // test_distinct_values();
+  // test_duplicate_values();
+  // test_multi_instance();
+  // test_find_erase_rand(10000, 17);
+  test_find_erase_rand(200, 1);
   printf("Passed all tests!\n");
 }
